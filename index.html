@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>FED Huancavelica — Informe Ejecutivo Educación | Dashboard</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <style>
   :root{
     --navy:#1B3A6B;
@@ -1453,8 +1453,12 @@ if(DATA_URL){
         renderWithSourceTag(loadEmbedded(), "Datos embebidos (no se pudo leer el Sheet: " + err.message + ")");
       } catch (err2) {
         const el = document.getElementById("dataStatus");
-        el.className = "err";
-        el.textContent = "No se pudieron cargar los datos externos ni los embebidos: " + err2.message;
+        if(el){
+          el.className = "err";
+          el.textContent = "No se pudieron cargar los datos externos ni los embebidos: " + err2.message;
+        } else {
+          console.error("No se pudieron cargar los datos externos ni los embebidos:", err2);
+        }
       }
     });
 } else {
@@ -1463,8 +1467,12 @@ if(DATA_URL){
     render(loadEmbedded());
   } catch (err) {
     const el = document.getElementById("dataStatus");
-    el.className = "err";
-    el.textContent = "No se pudieron leer los datos embebidos: " + err.message;
+    if(el){
+      el.className = "err";
+      el.textContent = "No se pudieron leer los datos embebidos: " + err.message;
+    } else {
+      console.error("No se pudieron leer los datos embebidos:", err);
+    }
   }
 }
 </script>

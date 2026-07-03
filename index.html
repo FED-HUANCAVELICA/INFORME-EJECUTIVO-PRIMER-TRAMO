@@ -1,4 +1,4 @@
-<!-- build: 2026-07-02 --><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8" />
@@ -199,7 +199,7 @@
   <div class="top-inner">
     <div class="title-block">
       <h1>FONDO DE ESTÍMULO AL DESEMPEÑO Y LOGRO DE RESULTADOS SOCIALES - FED</h1>
-      <p>Informe Ejecutivo Primer Tramo 2025 - 2026</p>
+      <p>Coordinación Territorial FED MIDIS Huancavelica</p>
     </div>
   </div>
 </header>
@@ -1081,13 +1081,18 @@
 <script>
 /*
  * Fuente de datos:
- * 1) Por defecto, lee el bloque embebido #fed-data (funciona siempre,
- *    incluso abriendo el archivo con doble clic).
- * 2) Si la página se abre con ?data=<url>, intenta cargar desde ahí en su
- *    lugar (para cuando se conecte a un Google Sheet publicado). Ver README.
+ * 1) Por defecto, intenta leer en vivo la pestaña "Educacion" del Google
+ *    Sheet FED_MIDIS_Huancavelica_DATOS (así los cambios que el coordinador
+ *    hace en el Sheet se reflejan solos, sin tocar ninguna URL).
+ * 2) Si se abre con ?data=<url>, usa esa URL en su lugar (por ejemplo para
+ *    apuntar a otra pestaña/categoría).
+ * 3) Si la red falla o el Sheet no responde, cae de vuelta al bloque
+ *    embebido #fed-data — así el archivo nunca se queda en blanco, incluso
+ *    abriéndolo con doble clic (sin internet). Ver README.
  */
 const params = new URLSearchParams(location.search);
-const DATA_URL = params.get("data");
+const DEFAULT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1IFQAzfTTfYN-v8KdnXFLMV0_cMmcOXk6DDMwYldy-Zw/gviz/tq?tqx=out:csv&sheet=Educacion";
+const DATA_URL = params.get("data") || DEFAULT_SHEET_URL;
 
 const ESTADO_COLOR = { verde:"#2E9E5B", amarillo:"#F2A93B", rojo:"#D64545", azul:"#3B7FC4", gris:"#9AA5B1" };
 const ESTADO_LABEL = { verde:"Cumple", amarillo:"En proceso", azul:"En proceso (2do tramo)", rojo:"En riesgo", gris:"Sin data" };

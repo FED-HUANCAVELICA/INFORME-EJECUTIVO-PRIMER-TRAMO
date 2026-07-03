@@ -1,1470 +1,355 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>FED Huancavelica — Informe Ejecutivo Educación | Dashboard</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
-<style>
-  :root{
-    --navy:#1B3A6B;
-    --navy-dark:#122748;
-    --teal:#0E7C86;
-    --verde:#2E9E5B;
-    --amarillo:#F2A93B;
-    --rojo:#D64545;
-    --azul:#3B7FC4;
-    --gris:#9AA5B1;
-    --bg:#F4F6F8;
-    --card:#FFFFFF;
-    --text:#2A2E33;
-    --text-muted:#6B7280;
-    --border:#E2E6EA;
-  }
-  *{box-sizing:border-box;}
-  body{
-    margin:0;
-    font-family:-apple-system,"Segoe UI",Arial,sans-serif;
-    background:var(--bg);
-    color:var(--text);
-  }
-  header.top{
-    background:linear-gradient(135deg,var(--navy) 0%,var(--navy-dark) 100%);
-    color:#fff;
-    padding:20px 24px;
-  }
-  .top-inner{
-    max-width:1180px;
-    margin:0 auto;
-    display:flex;
-    align-items:center;
-    gap:18px;
-    flex-wrap:wrap;
-  }
-  .logos{display:flex;align-items:center;gap:14px;}
-  .logos img{height:38px;background:#fff;border-radius:4px;padding:4px;}
-  .logos img.square{height:46px;width:46px;object-fit:cover;}
-  .title-block h1{font-size:1.35rem;margin:0 0 2px;font-weight:700;letter-spacing:.2px;}
-  .title-block p{margin:0;font-size:.85rem;color:#CBD8EA;}
-  .meta-row{
-    max-width:1180px;margin:10px auto 0;padding:0 24px;
-    display:flex;gap:18px;flex-wrap:wrap;font-size:.78rem;color:#AEC1DC;
-  }
-  main{max-width:1180px;margin:0 auto;padding:24px;}
-  h2.section-title{
-    color:var(--navy);
-    font-size:1.05rem;
-    border-bottom:3px solid var(--teal);
-    padding-bottom:8px;
-    margin:34px 0 16px;
-  }
-  .kpi-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-    gap:14px;
-  }
-  .kpi-card{
-    background:var(--card);
-    border-radius:10px;
-    border:1px solid var(--border);
-    padding:16px;
-    text-align:center;
-    box-shadow:0 1px 2px rgba(0,0,0,.04);
-  }
-  .kpi-card .num{font-size:1.9rem;font-weight:800;}
-  .kpi-card .lbl{font-size:.78rem;color:var(--text-muted);margin-top:2px;}
-  .kpi-card.verde .num{color:var(--verde);}
-  .kpi-card.amarillo .num{color:var(--amarillo);}
-  .kpi-card.azul .num{color:var(--azul);}
-  .kpi-card.rojo .num{color:var(--rojo);}
-  .kpi-card.gris .num{color:var(--gris);}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Corporativo FED - Región Huancavelica</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #05070f;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
 
-  .chart-card{
-    background:var(--card);
-    border-radius:10px;
-    border:1px solid var(--border);
-    padding:18px;
-    margin-bottom:18px;
-  }
-  .chart-card canvas{max-height:340px;}
+        /* Efecto de cristal pulido (Glassmorphism) */
+        .glass-card {
+            background: rgba(13, 18, 36, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
 
-  table.matrix{
-    width:100%;
-    border-collapse:collapse;
-    background:var(--card);
-    border-radius:10px;
-    overflow:hidden;
-    box-shadow:0 1px 2px rgba(0,0,0,.04);
-  }
-  table.matrix th{
-    background:var(--navy);
-    color:#fff;
-    text-align:left;
-    padding:10px 12px;
-    font-size:.78rem;
-    text-transform:uppercase;
-    letter-spacing:.03em;
-  }
-  table.matrix td{
-    padding:10px 12px;
-    font-size:.85rem;
-    border-bottom:1px solid var(--border);
-    vertical-align:top;
-  }
-  table.matrix tr.ind-row{cursor:pointer;}
-  table.matrix tr.ind-row:hover{background:#F8FAFC;}
-  .badge{
-    display:inline-block;
-    padding:3px 10px;
-    border-radius:20px;
-    font-size:.72rem;
-    font-weight:700;
-    color:#fff;
-    white-space:nowrap;
-  }
-  .badge.verde{background:var(--verde);}
-  .badge.amarillo{background:var(--amarillo);color:#333;}
-  .badge.rojo{background:var(--rojo);}
-  .badge.azul{background:var(--azul);}
-  .badge.gris{background:var(--gris);color:#333;}
+        .glass-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.7);
+            border-color: var(--theme-glow, #3b82f6);
+        }
 
-  .detail-row td{background:#FAFBFC;padding:0;}
-  .detail-inner{padding:16px 20px 20px;font-size:.85rem;line-height:1.55;}
-  .detail-inner h4{margin:12px 0 6px;color:var(--teal);font-size:.82rem;text-transform:uppercase;letter-spacing:.03em;}
-  .detail-inner ul{margin:4px 0;padding-left:20px;}
-  .detail-inner .kv{margin-bottom:4px;}
-  .detail-inner .kv b{color:var(--navy);}
-  .chevron{transition:transform .15s;display:inline-block;color:var(--text-muted);}
-  tr.open .chevron{transform:rotate(90deg);}
+        /* Animación de entrada para las tarjetas */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-  .mini-table-wrap{overflow-x:auto;margin:6px 0 14px;}
-  table.mini-table{border-collapse:collapse;font-size:.78rem;min-width:100%;}
-  table.mini-table th{
-    background:#EEF2F6;color:var(--navy);text-align:left;padding:6px 10px;
-    text-transform:capitalize;white-space:nowrap;border-bottom:2px solid var(--border);
-  }
-  table.mini-table td{padding:6px 10px;border-bottom:1px solid var(--border);white-space:nowrap;}
-  table.mini-table tr:last-child td{font-weight:700;background:#F8FAFC;}
-  .detalle-nota{font-size:.78rem;color:var(--text-muted);font-style:italic;margin:4px 0 14px;}
-
-  .alert-list{list-style:none;margin:0;padding:0;}
-  .alert-list li{
-    background:var(--card);
-    border:1px solid var(--border);
-    border-left:5px solid var(--gris);
-    border-radius:6px;
-    padding:10px 14px;
-    margin-bottom:8px;
-    font-size:.85rem;
-  }
-  .alert-list li.sev-rojo{border-left-color:var(--rojo);}
-  .alert-list li.sev-amarillo{border-left-color:var(--amarillo);}
-  .alert-list li.sev-azul{border-left-color:var(--azul);}
-  .alert-empty{color:var(--text-muted);font-style:italic;font-size:.88rem;}
-  .legend-note{font-size:.75rem;color:var(--text-muted);margin-top:10px;}
-
-  .prose{font-size:.88rem;line-height:1.6;color:var(--text);}
-  .prose p{margin:0 0 10px;}
-
-  footer.bottom{
-    max-width:1180px;margin:30px auto 0;padding:18px 24px;
-    border-top:1px solid var(--border);
-    font-size:.75rem;color:var(--text-muted);
-    display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;
-  }
-  .source-tag{
-    display:inline-block;background:#EEF2F6;color:var(--navy);
-    font-size:.7rem;padding:2px 8px;border-radius:4px;margin-left:6px;
-  }
-  #dataStatus{font-size:.8rem;margin-bottom:14px;}
-  #dataStatus.err{color:var(--rojo);font-weight:600;}
-  .ficha-box{
-    background:#EEF2F6;border-radius:8px;padding:12px 14px;margin:8px 0 14px;font-size:.83rem;
-  }
-  .ficha-box .fila{margin-bottom:5px;}
-  .ficha-box .fila:last-child{margin-bottom:0;}
-  .ficha-box b{color:var(--navy);}
-  @media (max-width:640px){
-    table.matrix thead{display:none;}
-    table.matrix, table.matrix tbody, table.matrix tr, table.matrix td{display:block;width:100%;}
-    table.matrix tr.ind-row{border:1px solid var(--border);border-radius:8px;margin-bottom:8px;padding:6px;}
-    table.matrix td{border:none;padding:4px 8px;}
-    table.matrix td.col-nombre{font-weight:600;}
-  }
-</style>
+        .animate-fade-in {
+            animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col justify-between">
 
-<header class="top">
-  <div class="top-inner">
-    <div class="title-block">
-      <h1>FONDO DE ESTÍMULO AL DESEMPEÑO Y LOGRO DE RESULTADOS SOCIALES - FED</h1>
-      <p>Coordinación Territorial FED MIDIS Huancavelica</p>
+    <div id="welcomeModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-xl transition-opacity duration-500">
+        <div class="glass-card max-w-4xl w-full mx-4 rounded-3xl overflow-hidden shadow-2xl relative flex flex-col md:flex-row border border-white/10">
+            
+            <div class="md:w-5/12 bg-gradient-to-br from-indigo-600 via-blue-700 to-slate-900 p-8 flex flex-col justify-between text-white relative overflow-hidden min-h-[280px]">
+                <div class="absolute inset-0 bg-cover bg-center opacity-20 mix-blend-overlay" style="background-image: url('https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="relative z-10">
+                    <span class="text-xs uppercase tracking-widest bg-white/20 px-3 py-1 rounded-full font-bold">EDICIÓN EXPERTA 2026</span>
+                    <h2 class="text-3xl font-black mt-4 leading-tight tracking-tight">Dinamización de la Gestión Pública</h2>
+                </div>
+                <div class="relative z-10">
+                    <p class="text-xs opacity-80 italic border-l-2 border-emerald-400 pl-3">"Garantizando el Desarrollo Infantil Temprano y coberturas sociales integrales en Huancavelica."</p>
+                </div>
+            </div>
+            
+            <div class="md:w-7/12 p-8 md:p-10 flex flex-col justify-between bg-slate-950/95">
+                <div>
+                    <h3 class="text-2xl font-extrabold text-white mb-4 tracking-tight">Monitoreo Estratégico del FED</h3>
+                    <p class="text-slate-300 text-sm leading-relaxed mb-4 text-justify">
+                        El <strong>Fondo de Estímulo al Desempeño y Logro de Resultados Sociales (FED)</strong> opera como un mecanismo de vanguardia en la gestión por resultados, vinculando el financiamiento al cumplimiento estricto de metas regionales.
+                    </p>
+                    <p class="text-slate-300 text-sm leading-relaxed text-justify mb-4">
+                        Este ecosistema de datos se ampara en los mandatos de la Constitución Política del Perú sobre la defensa de la persona humana, y se alinea estratégicamente con la <strong>Política Nacional de Desarrollo e Inclusión Social (PNDIS) al 2030</strong>.
+                    </p>
+                </div>
+                <div class="mt-6">
+                    <button onclick="closeWelcomeModal()" class="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-bold px-8 py-4 rounded-xl shadow-lg shadow-blue-500/20 transform hover:-translate-y-0.5 transition-all cursor-pointer tracking-wide text-center">
+                        INGRESAR AL PANEL DE EXPOSICIÓN
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</header>
 
-<main>
-  <div id="dataStatus">Cargando datos…</div>
-
-  <section>
-    <h2 class="section-title">Panorama de cumplimiento</h2>
-    <div class="kpi-grid" id="kpiGrid"></div>
-  </section>
-
-  <section>
-    <div class="chart-card">
-      <canvas id="chartPanorama"></canvas>
+    <div id="detailModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md hidden transition-all duration-300">
+        <div class="glass-card max-w-3xl w-full mx-4 rounded-2xl overflow-hidden shadow-2xl relative bg-slate-950/95 p-6 md:p-8 border border-white/10">
+            <button onclick="closeDetailModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white bg-white/5 hover:bg-white/10 p-2 rounded-full transition-all text-sm w-10 h-10 flex items-center justify-center cursor-pointer font-bold">✕</button>
+            <div id="modalContent"></div>
+        </div>
     </div>
-    <div class="chart-card">
-      <canvas id="chartAvanceMeta"></canvas>
-    </div>
-  </section>
 
-  <section>
-    <h2 class="section-title">Calendario de mediciones — convenio 2025-2026</h2>
-    <p class="legend-note">Línea base y meta según Decreto Supremo y ficha técnica; verificación oficial y corte de base de datos según ficha técnica de cada indicador.</p>
-    <table class="matrix">
-      <thead>
-        <tr>
-          <th>Código</th>
-          <th>Línea base</th>
-          <th>Meta</th>
-          <th>N° mediciones</th>
-          <th>Verificación oficial</th>
-          <th>Corte de base de datos</th>
-        </tr>
-      </thead>
-      <tbody id="calendarioBody"></tbody>
-    </table>
-  </section>
+    <header class="border-b border-white/10 bg-slate-950/70 backdrop-blur-md sticky top-0 z-40 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-4">
+                <div class="bg-red-600 text-white font-black px-4 py-1.5 rounded text-base tracking-tighter">PERÚ</div>
+                <div>
+                    <h1 class="text-lg font-extrabold text-white uppercase tracking-tight">Fondo de Estímulo al Desempeño (FED)</h1>
+                    <p class="text-xs text-slate-400">Gerencia Regional de Desarrollo Social &bull; Gobierno Regional de Huancavelica</p>
+                </div>
+            </div>
+            
+            <div id="syncStatus" class="flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 px-4 py-1.5 rounded-full">
+                <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                <span class="text-xs text-amber-400 font-bold uppercase tracking-wider">Sincronizando Base de Datos...</span>
+            </div>
+        </div>
+    </header>
 
-  <section>
-    <h2 class="section-title">Matriz de seguimiento — detalle por indicador</h2>
-    <p class="legend-note">Clic en una fila para ver nudos críticos, acciones de mejora y responsables.</p>
-    <table class="matrix">
-      <thead>
-        <tr>
-          <th style="width:40px;"></th>
-          <th>Código</th>
-          <th>Indicador</th>
-          <th>Basal</th>
-          <th>Meta</th>
-          <th>Plazo</th>
-          <th>Avance</th>
-          <th>Estado</th>
-        </tr>
-      </thead>
-      <tbody id="matrixBody"></tbody>
-    </table>
-  </section>
+    <nav class="max-w-7xl mx-auto w-full px-6 mt-6">
+        <div class="bg-slate-950/80 p-2 rounded-2xl border border-white/5 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+            <button onclick="switchCategory('educacion')" id="tab-educacion" class="tab-btn px-2 py-3.5 rounded-xl font-bold text-xs tracking-wide transition-all cubic-bezier cursor-pointer text-center bg-blue-600 text-white shadow-lg shadow-blue-600/20">
+                📚 EDUCACIÓN
+            </button>
+            <button onclick="switchCategory('salud')" id="tab-salud" class="tab-btn px-2 py-3.5 rounded-xl font-bold text-xs tracking-wide transition-all cubic-bezier cursor-pointer text-center text-slate-400 hover:text-white hover:bg-white/5">
+                🩺 SALUD
+            </button>
+            <button onclick="switchCategory('violencia')" id="tab-violencia" class="tab-btn px-2 py-3.5 rounded-xl font-bold text-xs tracking-wide transition-all cubic-bezier cursor-pointer text-center text-slate-400 hover:text-white hover:bg-white/5">
+                💜 VIOLENCIA MUJER
+            </button>
+            <button onclick="switchCategory('agua')" id="tab-agua" class="tab-btn px-2 py-3.5 rounded-xl font-bold text-xs tracking-wide transition-all cubic-bezier cursor-pointer text-center text-slate-400 hover:text-white hover:bg-white/5">
+                🚰 AGUA Y SANEAMIENTO
+            </button>
+            <button onclick="switchCategory('articulacion')" id="tab-articulacion" class="tab-btn px-2 py-3.5 rounded-xl font-bold text-xs tracking-wide transition-all cubic-bezier cursor-pointer text-center text-slate-400 hover:text-white hover:bg-white/5">
+                🤝 ARTICULACIÓN
+            </button>
+        </div>
+    </nav>
 
-  <section>
-    <h2 class="section-title">Alertas automáticas</h2>
-    <ul class="alert-list" id="alertList"></ul>
-    <p class="legend-note">🔴 brecha crítica o plazo vencido · 🟡 compromiso sin responsable · 🟠 acuerdo sin evidencia · 🔵 sin data / actividad sin ejecución.</p>
-  </section>
+    <main class="max-w-7xl mx-auto w-full px-6 py-8 flex-grow">
+        <div class="mb-8 text-center md:text-left">
+            <h2 id="pageTitle" class="text-4xl font-black text-white tracking-tight uppercase">MATRIZ DE SEGUIMIENTO EDITORIAL</h2>
+            <p id="pageSubtitle" class="text-blue-400 font-extrabold text-xl mt-1 tracking-wide uppercase">CATEGORÍA EDUCACIÓN</p>
+        </div>
 
-  <section>
-    <h2 class="section-title">Conclusiones y recomendaciones</h2>
-    <div class="prose" id="conclusionesBox"></div>
-  </section>
-</main>
+        <div id="indicatorsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </main>
 
-<footer class="bottom">
-  <span id="fUpdated"></span>
-</footer>
+    <footer class="border-t border-white/5 bg-slate-950/40 py-4 px-6 text-center text-xs text-slate-500 font-mono">
+        Dashboard Silicon Valley Escalable &bull; Automatización Mediante Google Sheets API v4
+    </footer>
 
-<!--
-  FED-DATA-EMBED
-  Fuente única de datos: data/educacion_fed.json (mismo esquema que usa el
-  informe Word). Se embebe aquí para que el dashboard funcione abriendo el
-  archivo directamente (file://), sin depender de un servidor local.
-  Este bloque se regenera con `node build.js` — no editar a mano.
--->
-<script id="fed-data" type="application/json">
-{
-  "meta": {
-    "categoria": "EDUCACIÓN",
-    "region": "Huancavelica",
-    "tramo": "1er tramo de medición: 01 diciembre 2025 - 31 mayo 2026",
-    "norma": "Decreto Supremo N° 012-2025-MIDIS",
-    "fuente": "Matriz de seguimiento FED Educación (archivo autorizado por el Coordinador Territorial)",
-    "coordinador": "Coordinación Territorial FED MIDIS Huancavelica",
-    "fase": "FED 2.0"
-  },
-  "introduccion": [
-    "El Fondo de Estímulo al Desempeño y Logro de Resultados Sociales (FED) es un mecanismo de incentivo monetario creado el año 2014, opera con el establecimiento de metas de indicadores con entidades del gobierno nacional y gobiernos regionales, y son aprobados mediante Decreto Supremo. Tiene como finalidad impulsar el logro de los resultados sociales establecidos en la Política Nacional de Desarrollo e Inclusión Social con énfasis en el Desarrollo Infantil Temprano y reducción de la violencia contra la mujer. El FED prioriza su intervención en los distritos de mayor vulnerabilidad (pobres y de extrema pobreza).",
-    "Este mecanismo promueve la entrega del servicio integral (agua, salud y educación) y oportuna a la población, especialmente a las gestantes, niños y niñas menores de cinco años y adolescentes, permitiendo de esta manera el trabajo conjunto de los sectores involucrados como son MINSA, MIMP, MINEDU, MVCS, RENIEC, Programas Sociales y Gobiernos Locales, fortaleciendo así el trabajo conjunto a nivel intersectorial e intergubernamental."
-  ],
-  "objetivo": "Se socializó con la Gerencia Regional de Desarrollo Social y el sector educación el desempeño de la categoría de enero 2026 a abril 2026, para que se tomen acciones de intervención que permitan atender alertas tempranas y lograr el cumplimiento de indicadores de gestión y metas de cobertura del FED 2025 - 2026.",
-  "desarrollo": [
-    "En la edición 2025-2026, el Gobierno Regional de Huancavelica se comprometió a implementar 28 indicadores distribuidos en las categorías de Salud, Educación, Agua y Articulación. Estos indicadores, así como sus metas, están contemplados en el Decreto Supremo N° 012-2025-MIDIS, y se establecen dos tramos de medición con los siguientes cortes:",
-    "1er tramo: 01 diciembre 2025 - 31 mayo 2026",
-    "2do tramo: 01 junio 2026 - 31 diciembre 2026",
-    "Sectores responsables de la implementación de indicadores: Educación, Vivienda, Construcción y Saneamiento, y Pliego Regional - Gerencia Regional de Desarrollo Social."
-  ],
-  "categoria_educacion_nota": [
-    "En la región Huancavelica existen 8 UGEL y una Dirección Regional de Educación. Los indicadores se implementan en todas las UGEL, con excepción del indicador EI-01.01, que corresponde a la UGEL Huancavelica y Huaytará.",
-    "A continuación se detallan los 7 indicadores de gestión y metas de cobertura de la categoría Educación, más las acciones previas del indicador de AGUA AI-05.01, que tiene un componente inicial que se implementa en la categoría Educación y en una segunda fase corresponde a las IIEE realizar el registro en el sistema de SUNASS (Mi Cole con Agua Segura)."
-  ],
-  "conclusiones": [
-    "En el ciclo operativo del FED se tiene previsto evaluar en la primera medición 2 compromisos de gestión (EI-01 y EI-02) y una meta de cobertura (MC-04.01); de los cuales se constató, con data regional, el cumplimiento de los dos compromisos de gestión, mientras que la meta de cobertura MC-04.01 se encuentra en proceso de implementación.",
-    "Existen compromisos de gestión y metas de cobertura que, de no implementarse acciones inmediatas, verán afectado su nivel de cumplimiento al momento del corte, por estar sujetos a procesos previos obligatorios según ficha técnica de los indicadores; entre ellos: EI-02, MC-05.01, MC-06.01, MC-07.01 y AI-05.01, como se detalla en la matriz."
-  ],
-  "recomendaciones": [
-    "Se recomienda a la Dirección Regional de Educación establecer acciones urgentes con su equipo técnico regional vinculado a la implementación de indicadores del FED 2025 - 2026, para garantizar el cumplimiento de metas y la sostenibilidad de los procesos implementados.",
-    "Se recomienda a la Gerencia Regional de Desarrollo Social intensificar el seguimiento de los compromisos de gestión y metas de cobertura del FED en todas las categorías vigentes."
-  ],
-  "indicadores": [
-    {
-      "codigo": "EI-01.01",
-      "nombre": "Porcentaje de IE del Modelo de Servicio Educativo (MSE) de secundaria en ámbito rural que reciben oportunamente los kits de bienestar asignados y se encuentran registrados en el Módulo Complementario del SIGA.",
-      "basal": "28.6%",
-      "meta_1ra": "",
-      "meta_2da": "67.1%",
-      "plazo": "29 de mayo de 2026",
-      "avance": "100%",
-      "cumplimiento": "CUMPLE",
-      "cumplimiento_detalle": "CUMPLE (Data regional)",
-      "estado_color": "verde",
-      "nudos_criticos": [
-        "Demoras en el proceso de adquisición y entrega de las pecosas e insumos del botiquín a los directores.",
-        "Demora en el registro de las pecosas firmadas en el módulo complementario del SIGA."
-      ],
-      "acciones_mejora": [
-        "Garantizar el registro oportuno y correcto de las pecosas en el módulo complementario del SIGA hasta el 22 de mayo de 2026."
-      ],
-      "responsables": [
-        "Responsable de Almacén",
-        "Especialista de Educación Secundaria Tutorial"
-      ],
-      "detalle_iiee": [
-        {
-          "cod_mod": "1780295",
-          "cod_local": "174340",
-          "cen_edu": "36406",
-          "ugel": "UGEL Huancavelica",
-          "estado": "CUMPLE"
-        },
-        {
-          "cod_mod": "1780303",
-          "cod_local": "174298",
-          "cen_edu": "36133",
-          "ugel": "UGEL Huancavelica",
-          "estado": "CUMPLE"
-        },
-        {
-          "cod_mod": "1780311",
-          "cod_local": "174910",
-          "cen_edu": "36142",
-          "ugel": "UGEL Huancavelica",
-          "estado": "CUMPLE"
-        },
-        {
-          "cod_mod": "1780329",
-          "cod_local": "174948",
-          "cen_edu": "36146",
-          "ugel": "UGEL Huancavelica",
-          "estado": "CUMPLE"
-        },
-        {
-          "cod_mod": "1780337",
-          "cod_local": "172162",
-          "cen_edu": "36110",
-          "ugel": "UGEL Huancavelica",
-          "estado": "CUMPLE"
-        },
-        {
-          "cod_mod": "1782259",
-          "cod_local": "184400",
-          "cen_edu": "22595",
-          "ugel": "UGEL Huaytará",
-          "estado": "CUMPLE"
-        },
-        {
-          "cod_mod": "1794742",
-          "cod_local": "184565",
-          "cen_edu": "22586",
-          "ugel": "UGEL Huaytará",
-          "estado": "CUMPLE"
+    <script>
+        let fedData = [];
+        let currentCategory = 'educacion';
+
+        const colorThemes = {
+            educacion: { bg: 'bg-blue-600', glow: '#3b82f6', text: 'text-blue-400' },
+            salud: { bg: 'bg-emerald-600', glow: '#10b981', text: 'text-emerald-400' },
+            violencia: { bg: 'bg-fuchsia-600', glow: '#d946ef', text: 'text-fuchsia-400' },
+            agua: { bg: 'bg-cyan-600', glow: '#06b6d4', text: 'text-cyan-400' },
+            articulacion: { bg: 'bg-orange-600', glow: '#f97316', text: 'text-orange-400' }
+        };
+
+        function switchCategory(cat) {
+            currentCategory = cat;
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.className = "tab-btn px-2 py-3.5 rounded-xl font-bold text-xs tracking-wide transition-all cubic-bezier cursor-pointer text-center text-slate-400 hover:text-white hover:bg-white/5";
+            });
+
+            const activeTab = document.getElementById(`tab-${cat}`);
+            const subtitle = document.getElementById('pageSubtitle');
+            const theme = colorThemes[cat];
+            
+            activeTab.className = `tab-btn px-2 py-3.5 rounded-xl font-bold text-xs tracking-wide transition-all cubic-bezier cursor-pointer text-center ${theme.bg} text-white shadow-lg`;
+            subtitle.innerText = cat === 'violencia' ? "CATEGORÍA VIOLENCIA CONTRA LA MUJER" : `CATEGORÍA ${cat.toUpperCase()}`;
+            subtitle.className = `${theme.text} font-extrabold text-xl mt-1 tracking-wide uppercase`;
+
+            renderGrid();
         }
-      ],
-      "ficha_tecnica": {
-        "archivo": "EI.01.01 Kits de bienestar.pdf",
-        "definicion": "Porcentaje de instituciones educativas (IE) del Modelo de Servicio Educativo (MSE) de Secundaria en Ámbito Rural que reciben oportunamente los kits de aseo, limpieza y botiquín (kits de bienestar) y se encuentran registrados en el Módulo Complementario del SIGA.",
-        "verificacion_oficial": "Única verificación: mayo 2026",
-        "corte_bd": "29 de mayo de 2026",
-        "numero_mediciones": "Única verificación (1 medición durante todo el convenio 2025-2026)",
-        "punto_focal_nacional": "Dirección de Servicios Educativos en el Ámbito Rural (DISER) - MINEDU"
-      }
-    },
-    {
-      "codigo": "EI-02.01",
-      "nombre": "Porcentaje de plazas CAS para la atención de los servicios en los centros y programas de la modalidad EBE que son cubiertas de forma oportuna.",
-      "basal": "20.0%",
-      "meta_1ra": "",
-      "meta_2da": "28.6%",
-      "plazo": "17 de abril de 2026",
-      "avance": "",
-      "cumplimiento": "CUMPLE",
-      "cumplimiento_detalle": "CUMPLE (Data regional)",
-      "estado_color": "verde",
-      "nudos_criticos": [
-        "No se contaba con oferta de profesionales como tecnólogos médicos para su contratación.",
-        "Demoras en el lanzamiento de procesos de concurso en algunas UGEL: Castrovirreyna, Acobamba.",
-        "Cobertura parcial de las plazas previstas; la UGEL Churcampa tuvo un menor desempeño (2 de 8 plazas).",
-        "Demora en el registro de los contratos en la plataforma NEXUS - UGEL."
-      ],
-      "acciones_mejora": [
-        "Espera del nivel de cumplimiento del reporte nacional.",
-        "Cierre de brechas de las plazas no cubiertas hasta el 16 de abril de 2026, garantizando su registro en el sistema NEXUS."
-      ],
-      "responsables": [
-        "Especialista de Educación Básica Especial",
-        "Responsable NEXUS"
-      ],
-      "detalle_ugel": [
-        {
-          "ugel": "UGEL Acobamba",
-          "meta": 5,
-          "cubiertas": 5,
-          "avance": "100%",
-          "restante": "0"
-        },
-        {
-          "ugel": "UGEL Angaraes",
-          "meta": 2,
-          "cubiertas": 1,
-          "avance": "50%",
-          "restante": "1 (Desierta)"
-        },
-        {
-          "ugel": "UGEL Castrovirreyna",
-          "meta": 2,
-          "cubiertas": 2,
-          "avance": "100%",
-          "restante": "0"
-        },
-        {
-          "ugel": "UGEL Churcampa",
-          "meta": 8,
-          "cubiertas": 2,
-          "avance": "25%",
-          "restante": "6 (En convocatoria)"
-        },
-        {
-          "ugel": "UGEL Huancavelica",
-          "meta": 3,
-          "cubiertas": 3,
-          "avance": "100%",
-          "restante": "0"
-        },
-        {
-          "ugel": "UGEL Huaytará",
-          "meta": 2,
-          "cubiertas": 2,
-          "avance": "100%",
-          "restante": "0"
-        },
-        {
-          "ugel": "UGEL Surcubamba",
-          "meta": 1,
-          "cubiertas": 1,
-          "avance": "100%",
-          "restante": "0"
-        },
-        {
-          "ugel": "UGEL Tayacaja",
-          "meta": 12,
-          "cubiertas": 10,
-          "avance": "83%",
-          "restante": "2 (En convocatoria)"
-        },
-        {
-          "ugel": "TOTAL REGIÓN",
-          "meta": 35,
-          "cubiertas": 26,
-          "avance": "74.30%",
-          "restante": "9 Plazas pendientes"
+
+        function renderGrid() {
+            const grid = document.getElementById('indicatorsGrid');
+            grid.innerHTML = '';
+
+            const filtered = fedData.filter(item => item.categoria === currentCategory);
+
+            if(filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-500 font-bold">No hay datos registrados para la categoría "${currentCategory}" en el Sheets.</div>`;
+                return;
+            }
+
+            filtered.forEach((item, index) => {
+                let badge = '';
+                if(item.estado === 'CUMPLE') badge = `<span class="px-2.5 py-1 text-xs font-black bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-md">CUMPLE</span>`;
+                if(item.estado === 'EN PROCESO') badge = `<span class="px-2.5 py-1 text-xs font-black bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-md">EN PROCESO</span>`;
+                if(item.estado === 'EN RIESGO') badge = `<span class="px-2.5 py-1 text-xs font-black bg-red-500/10 text-red-400 border border-red-500/20 rounded-md">EN RIESGO</span>`;
+
+                const theme = colorThemes[item.categoria] || colorThemes.educacion;
+
+                const card = document.createElement('div');
+                card.className = `glass-card p-6 rounded-2xl cursor-pointer flex flex-col justify-between opacity-0 animate-fade-in`;
+                card.style.animationDelay = `${index * 50}ms`;
+                card.style.setProperty('--theme-glow', theme.glow);
+                card.onclick = () => openDetailModal(item.codigo);
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-xs font-mono font-black bg-white/5 px-2.5 py-1 rounded border border-white/5 text-slate-300">${item.codigo}</span>
+                            ${badge}
+                        </div>
+                        <h4 class="text-lg font-bold text-white leading-snug mb-2">${item.titulo}</h4>
+                        <p class="text-slate-400 text-xs line-clamp-3 mb-4 text-justify">${item.descripcion}</p>
+                    </div>
+                    <div class="border-t border-white/5 pt-4 grid grid-cols-3 gap-1 text-center">
+                        <div>
+                            <div class="text-[9px] uppercase text-slate-500 font-bold tracking-wider">LB</div>
+                            <div class="text-xs font-bold text-slate-300 mt-0.5">${item.basal}</div>
+                        </div>
+                        <div>
+                            <div class="text-[9px] uppercase text-slate-500 font-bold tracking-wider">Meta</div>
+                            <div class="text-xs font-bold text-white mt-0.5">${item.meta}</div>
+                        </div>
+                        <div class="bg-white/5 rounded p-1">
+                            <div class="text-[9px] uppercase text-slate-400 font-black tracking-wider">Avance</div>
+                            <div class="text-xs font-black text-amber-400 mt-0.5">${item.avance}</div>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
         }
-      ],
-      "ficha_tecnica": {
-        "archivo": "EI.02.01 Plaza CAS EBE.pdf",
-        "definicion": "Porcentaje de plazas bajo el régimen CAS asignadas para la atención de los servicios educativos en los centros y programas de Educación Básica Especial (EBE), cubiertas oportunamente para el buen inicio del año escolar (Sistema NEXUS).",
-        "verificacion_oficial": "Única verificación: mayo 2026",
-        "corte_bd": "17 de abril de 2026",
-        "numero_mediciones": "Única verificación (1 medición durante todo el convenio 2025-2026)",
-        "punto_focal_nacional": "Dirección de Educación Básica Especial (DEBE) - MINEDU"
-      }
-    },
-    {
-      "codigo": "EI-03.01",
-      "nombre": "Porcentaje de locales educativos de IIEE públicas que forman parte del programa Mi Mantenimiento que ejecutaron acciones de mantenimiento en instalaciones sanitarias en el marco del programa de mantenimiento 2026.",
-      "basal": "60.1%",
-      "meta_1ra": "",
-      "meta_2da": "66.0%",
-      "plazo": "31 de julio de 2026 (corte de base de datos; corregido según ficha técnica — el informe original decía 31 de agosto)",
-      "avance": "",
-      "cumplimiento": "EN PROCESO",
-      "cumplimiento_detalle": "En proceso (verificación oficial: diciembre 2026, 2do tramo de medición)",
-      "estado_color": "azul",
-      "nudos_criticos": [
-        "Demora en el registro de las fichas de acciones de mantenimiento (FAM) por parte de los directores.",
-        "Directores omisos a las rendiciones de acciones de mantenimiento de años anteriores.",
-        "No se priorizan acciones de mantenimiento en instalaciones sanitarias."
-      ],
-      "acciones_mejora": [
-        "Fortalecer el seguimiento a nivel de UGEL para el cumplimiento de la programación de acciones de mantenimiento según plazos del MINEDU.",
-        "Garantizar la priorización de acciones de mantenimiento en instalaciones sanitarias.",
-        "Identificar alertas de omisión de registro reportadas por el sistema Mi Mantenimiento.",
-        "Garantizar el registro oportuno de las FAM, la declaración de gastos (DG) y el Panel de Culminación de Acciones (PCA) en el sistema Mi Mantenimiento."
-      ],
-      "responsables": [
-        "Especialista en Mantenimiento DREH y UGEL"
-      ],
-      "detalle_ugel": [
-        {
-          "ugel": "UGEL Churcampa",
-          "no_cumple": 11,
-          "cumple": 0,
-          "total": 11,
-          "avance": "0.0%"
-        },
-        {
-          "ugel": "UGEL Huancavelica",
-          "no_cumple": 8,
-          "cumple": 0,
-          "total": 8,
-          "avance": "0.0%"
-        },
-        {
-          "ugel": "UGEL Huaytará",
-          "no_cumple": 5,
-          "cumple": 0,
-          "total": 5,
-          "avance": "0.0%"
-        },
-        {
-          "ugel": "UGEL Surcubamba",
-          "no_cumple": 10,
-          "cumple": 0,
-          "total": 10,
-          "avance": "0.0%"
-        },
-        {
-          "ugel": "UGEL Tayacaja",
-          "no_cumple": 24,
-          "cumple": 0,
-          "total": 24,
-          "avance": "0.0%"
-        },
-        {
-          "ugel": "HUANCAVELICA (total)",
-          "no_cumple": 59,
-          "cumple": 0,
-          "total": 59,
-          "avance": "0.0%"
+
+        function openDetailModal(code) {
+            const item = fedData.find(d => d.codigo === code);
+            if(!item) return;
+
+            let badgeColor = 'bg-blue-500/10 text-blue-400 border-blue-500/20';
+            if(item.estado === 'CUMPLE') badgeColor = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+            if(item.estado === 'EN RIESGO') badgeColor = 'bg-red-500/10 text-red-400 border-red-500/20';
+            if(item.estado === 'EN PROCESO') badgeColor = 'bg-amber-500/10 text-amber-400 border-amber-500/20';
+
+            const modalContent = document.getElementById('modalContent');
+            modalContent.innerHTML = `
+                <div class="flex flex-col gap-4 max-h-[80vh] overflow-y-auto pr-2">
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs font-mono bg-white/5 border border-white/10 text-slate-300 px-3 py-1 rounded font-bold">${item.codigo}</span>
+                        <span class="px-3 py-0.5 text-xs font-bold border rounded ${badgeColor}">${item.estado}</span>
+                    </div>
+                    
+                    <h3 class="text-2xl font-black text-white leading-tight">${item.titulo}</h3>
+                    <p class="text-slate-300 text-xs leading-relaxed text-justify bg-white/5 p-4 rounded-xl border border-white/5">${item.descripcion}</p>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center bg-slate-900/60 p-4 rounded-xl border border-white/5">
+                        <div>
+                            <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Línea Base</div>
+                            <div class="text-base font-black text-slate-300 mt-1">${item.basal}</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Meta Pactada</div>
+                            <div class="text-base font-black text-white mt-1">${item.meta}</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Avance Real</div>
+                            <div class="text-base font-black text-amber-400 mt-1">${item.avance}</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Plazo / Corte</div>
+                            <div class="text-[11px] font-semibold text-slate-400 mt-1.5 leading-tight">${item.plazo}</div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div class="bg-red-500/5 border border-red-500/10 p-3 rounded-lg flex gap-3">
+                            <div class="text-red-400 font-bold text-sm">🚨</div>
+                            <div>
+                                <h5 class="text-xs uppercase tracking-wider font-extrabold text-red-400 mb-0.5">Nudo Crítico Identificado</h5>
+                                <p class="text-slate-300 text-xs text-justify leading-relaxed">${item.nudos_criticos}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-emerald-500/5 border border-emerald-500/10 p-3 rounded-lg flex gap-3">
+                            <div class="text-emerald-400 font-bold text-sm">💡</div>
+                            <div>
+                                <h5 class="text-xs uppercase tracking-wider font-extrabold text-emerald-400 mb-0.5">Acción de Mejora Sugerida</h5>
+                                <p class="text-slate-300 text-xs text-justify leading-relaxed">${item.acciones}</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900/40 p-3 rounded-lg flex gap-3 border border-white/5">
+                            <div class="text-slate-400 font-bold text-sm">👤</div>
+                            <div>
+                                <h5 class="text-xs uppercase tracking-wider font-extrabold text-slate-400 mb-0.5">Responsable Sectorial</h5>
+                                <p class="text-slate-300 text-xs font-semibold">${item.responsable}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('detailModal').classList.remove('hidden');
         }
-      ],
-      "ficha_tecnica": {
-        "archivo": "EI.03.01 Mantenimiento.pdf",
-        "definicion": "Porcentaje de locales educativos beneficiarios del Programa de Mantenimiento 2026 que registraron al menos una acción de mantenimiento en instalaciones sanitarias, con FAM y PCA y Declaración de Gastos (DG) registradas/verificadas dentro del periodo y monto ejecutado mayor a 0, según el sistema Mi Mantenimiento.",
-        "verificacion_oficial": "Única verificación: diciembre 2026",
-        "corte_bd": "31 de julio de 2026",
-        "numero_mediciones": "Única verificación (1 medición durante todo el convenio 2025-2026)",
-        "punto_focal_nacional": "Programa Nacional de Infraestructura Educativa (PRONIED) - MINEDU"
-      }
-    },
-    {
-      "codigo": "MC-04.01",
-      "nombre": "Porcentaje de niñas y niños de 3 años de edad que son matriculados y registrados en el SIAGIE, en el año escolar 2026 a nivel departamental.",
-      "basal": "94.1%",
-      "meta_1ra": "",
-      "meta_2da": "95.5%",
-      "plazo": "31 de mayo de 2026",
-      "avance": "86.1% (corte al 31 de marzo - data SIAGIE nacional)",
-      "cumplimiento": "EN PROCESO",
-      "cumplimiento_detalle": "EN PROCESO",
-      "estado_color": "amarillo",
-      "nudos_criticos": [
-        "Omisión de registro de nómina definitiva de matrícula de niños por parte de los directores de las IIEE.",
-        "Padrón nominal desactualizado, incluye niños que están viviendo en otra jurisdicción.",
-        "Padres de familia que no matriculan a sus hijos en edad temprana."
-      ],
-      "acciones_mejora": [
-        "Fortalecer el seguimiento a las UGEL para garantizar la matrícula y el registro de la matrícula definitiva en el SIAGIE.",
-        "Fortalecer coordinaciones con DIRESA y RENIEC para identificar casos especiales (niños fallecidos, niños sin DNI).",
-        "Intensificar las salidas a campo de los equipos de las UGEL para la búsqueda de niños de 3 años que forman parte del denominador.",
-        "Fortalecer la comunicación masiva a favor de la matrícula temprana en niños de 3 años.",
-        "Socializar los avances de matrícula de niños de 3 años en las instancias de articulación local y regional."
-      ],
-      "responsables": [
-        "Especialista SIAGIE",
-        "Especialista Educación Inicial"
-      ],
-      "detalle_provincia": [
-        {
-          "provincia": "ACOBAMBA",
-          "matriculados": 534,
-          "no_matriculados": 47,
-          "pct": "91.9%"
-        },
-        {
-          "provincia": "ANGARAES",
-          "matriculados": 720,
-          "no_matriculados": 185,
-          "pct": "79.6%"
-        },
-        {
-          "provincia": "CASTROVIRREYNA",
-          "matriculados": 178,
-          "no_matriculados": 31,
-          "pct": "85.2%"
-        },
-        {
-          "provincia": "CHURCAMPA",
-          "matriculados": 481,
-          "no_matriculados": 53,
-          "pct": "90.1%"
-        },
-        {
-          "provincia": "HUANCAVELICA",
-          "matriculados": 1476,
-          "no_matriculados": 243,
-          "pct": "85.9%"
-        },
-        {
-          "provincia": "HUAYTARÁ",
-          "matriculados": 217,
-          "no_matriculados": 18,
-          "pct": "92.3%"
-        },
-        {
-          "provincia": "TAYACAJA",
-          "matriculados": 1173,
-          "no_matriculados": 180,
-          "pct": "86.7%"
-        },
-        {
-          "provincia": "TOTAL",
-          "matriculados": 4779,
-          "no_matriculados": 757,
-          "pct": "86.3%"
+
+        function closeDetailModal() { document.getElementById('detailModal').classList.add('hidden'); }
+        
+        function closeWelcomeModal() {
+            document.getElementById('welcomeModal').classList.add('opacity-0');
+            setTimeout(() => document.getElementById('welcomeModal').style.display = 'none', 500);
         }
-      ],
-      "ficha_tecnica": {
-        "archivo": "MC.04.01 Acceso Educación.pdf",
-        "definicion": "Porcentaje de niñas y niños de 3 años de edad (edad calculada al 31 de marzo) que acceden al servicio de educación inicial de la EBR y EBE, matriculados y registrados en el SIAGIE, respecto al total de niñas y niños de 3 años a nivel departamental (Padrón Nominal MINSA).",
-        "verificacion_oficial": "Única verificación: mayo 2026 (más seguimiento mensual)",
-        "corte_bd": "31 de mayo de 2026",
-        "numero_mediciones": "Única verificación oficial (1 medición), más seguimiento mensual interno no vinculante durante todo el convenio 2025-2026",
-        "punto_focal_nacional": "Dirección de Educación Inicial (DEI) - MINEDU"
-      }
-    },
-    {
-      "codigo": "MC-05.01",
-      "nombre": "Porcentaje de servicios educativos de Educación Intercultural Bilingüe y de la Educación Rural que reciben de manera pertinente y suficiente todo el material educativo que le corresponde recibir.",
-      "basal": "84.8%",
-      "meta_1ra": "",
-      "meta_2da": "87.0%",
-      "plazo": "23 de noviembre de 2026",
-      "avance": "102.9% de volumen con registro de conformidad en MC-SIGA sobre la base regional (289,438 de 281,314 unidades) — dato de seguimiento interno reciente; el indicador oficial FED se mide por completitud de títulos por IIEE, no solo por volumen, por lo que el % de cumplimiento real puede ser distinto",
-      "cumplimiento": "EN PROCESO",
-      "cumplimiento_detalle": "EN PROCESO — volumen regional despachado y con conformidad supera la base, pero persisten 3,580 unidades sin acta de entrega registrada en el MC SIGA, concentradas en UGEL Surcubamba, Tayacaja, Huancavelica y Angaraes",
-      "estado_color": "amarillo",
-      "nudos_criticos": [
-        "Demoras en la distribución del material educativo hasta el nivel de IIEE.",
-        "Demora en el registro de las pecosas en el módulo complementario del SIGA."
-      ],
-      "acciones_mejora": [
-        "Establecer contacto con el MINEDU para la generación de reportes específicos en IIEE públicas de Educación Intercultural Bilingüe que reciben de manera pertinente y suficiente el material educativo.",
-        "Fortalecer el seguimiento a nivel de UGEL para el registro oportuno de las pecosas en el módulo complementario del SIGA."
-      ],
-      "responsables": [
-        "Especialista de Abastecimiento",
-        "Responsable de Almacén"
-      ],
-      "detalle_ugel": [
-        {
-          "ugel": "COAR Huancavelica",
-          "programado_a": 35,
-          "base_iiee_e": 0,
-          "despachado_iiee_f": 0,
-          "conformidad_g": 0,
-          "pct_despacho": "0.00%",
-          "pct_conformidad": "0.00%",
-          "pendiente_conformidad": 0
-        },
-        {
-          "ugel": "DRE Huancavelica",
-          "programado_a": 128,
-          "base_iiee_e": 0,
-          "despachado_iiee_f": 0,
-          "conformidad_g": 0,
-          "pct_despacho": "0.00%",
-          "pct_conformidad": "0.00%",
-          "pendiente_conformidad": 0
-        },
-        {
-          "ugel": "UGEL Acobamba",
-          "programado_a": 29921,
-          "base_iiee_e": 27939,
-          "despachado_iiee_f": 27978,
-          "conformidad_g": 27978,
-          "pct_despacho": "100.14%",
-          "pct_conformidad": "100.14%",
-          "pendiente_conformidad": 0
-        },
-        {
-          "ugel": "UGEL Angaraes",
-          "programado_a": 47573,
-          "base_iiee_e": 45231,
-          "despachado_iiee_f": 47310,
-          "conformidad_g": 46238,
-          "pct_despacho": "104.60%",
-          "pct_conformidad": "102.23%",
-          "pendiente_conformidad": 1072
-        },
-        {
-          "ugel": "UGEL Castrovirreyna",
-          "programado_a": 8336,
-          "base_iiee_e": 7614,
-          "despachado_iiee_f": 7666,
-          "conformidad_g": 7482,
-          "pct_despacho": "100.68%",
-          "pct_conformidad": "98.27%",
-          "pendiente_conformidad": 184
-        },
-        {
-          "ugel": "UGEL Churcampa",
-          "programado_a": 31247,
-          "base_iiee_e": 29790,
-          "despachado_iiee_f": 30819,
-          "conformidad_g": 30819,
-          "pct_despacho": "103.45%",
-          "pct_conformidad": "103.45%",
-          "pendiente_conformidad": 0
-        },
-        {
-          "ugel": "UGEL Huancavelica",
-          "programado_a": 94488,
-          "base_iiee_e": 88963,
-          "despachado_iiee_f": 94525,
-          "conformidad_g": 93484,
-          "pct_despacho": "106.25%",
-          "pct_conformidad": "105.08%",
-          "pendiente_conformidad": 1041
-        },
-        {
-          "ugel": "UGEL Huaytará",
-          "programado_a": 10978,
-          "base_iiee_e": 10255,
-          "despachado_iiee_f": 10714,
-          "conformidad_g": 10714,
-          "pct_despacho": "104.48%",
-          "pct_conformidad": "104.48%",
-          "pendiente_conformidad": 0
-        },
-        {
-          "ugel": "UGEL Surcubamba",
-          "programado_a": 14737,
-          "base_iiee_e": 13685,
-          "despachado_iiee_f": 13043,
-          "conformidad_g": 12541,
-          "pct_despacho": "95.31%",
-          "pct_conformidad": "91.64%",
-          "pendiente_conformidad": 502
-        },
-        {
-          "ugel": "UGEL Tayacaja",
-          "programado_a": 61191,
-          "base_iiee_e": 57837,
-          "despachado_iiee_f": 60963,
-          "conformidad_g": 60182,
-          "pct_despacho": "105.40%",
-          "pct_conformidad": "104.05%",
-          "pendiente_conformidad": 781
-        },
-        {
-          "ugel": "TOTAL REGIÓN",
-          "programado_a": 298634,
-          "base_iiee_e": 281314,
-          "despachado_iiee_f": 293018,
-          "conformidad_g": 289438,
-          "pct_despacho": "104.16%",
-          "pct_conformidad": "102.89%",
-          "pendiente_conformidad": 3580
+
+        function parseCSVLine(text) {
+            let p = '', r = [];
+            let q = false;
+            for (let i = 0; i < text.length; i++) {
+                let c = text[i];
+                if (c === '"') { q = !q; }
+                else if (c === ',' && !q) { r.push(p.trim()); p = ''; }
+                else if (c === '\r') { }
+                else { p += c; }
+            }
+            r.push(p.trim());
+            return r;
         }
-      ],
-      "detalle_nota": "Tabla de distribución y conformidad de material educativo por UGEL (columnas a-g según nomenclatura del reporte regional), compartida por el equipo el 02/07/2026. La columna 'pendiente_conformidad' es el material despachado a IIEE que aún no tiene acta de entrega cargada en el Módulo Complementario del SIGA. Nota: el indicador oficial FED evalúa completitud de títulos por IIEE, no solo volumen — el % de cumplimiento real puede diferir de estos porcentajes de volumen.",
-      "ficha_tecnica": {
-        "archivo": "MC.05.01 Material Educativo.pdf",
-        "definicion": "Porcentaje de servicios educativos de inicial, primaria y secundaria de los Modelos de Servicio Educativo de Educación Intercultural Bilingüe (EIB) y de Educación Rural de la EBR que reciben la totalidad del material educativo que les corresponde, de manera pertinente y en cantidad suficiente (registro de PECOSA en MC SIGA).",
-        "verificacion_oficial": "Única verificación: diciembre 2026",
-        "corte_bd": "23 de noviembre de 2026",
-        "numero_mediciones": "Única verificación (1 medición durante todo el convenio 2025-2026)",
-        "punto_focal_nacional": "Dirección General de Recursos Educativos (DIGERE) - MINEDU"
-      }
-    },
-    {
-      "codigo": "MC-06.01",
-      "nombre": "Porcentaje de docentes de IIEE EIB matriculados y que culminan los cursos de lectura y escritura en lengua originaria mediante la plataforma de SIFODS.",
-      "basal": "2.3%",
-      "meta_1ra": "",
-      "meta_2da": "20.6%",
-      "plazo": "30 de setiembre de 2026",
-      "avance": "54.7% aprobados en seguimiento interno regional al 30/06/2026 (283 de 517 docentes) — no es el corte oficial, que es el 30/09/2026",
-      "cumplimiento": "EN PROCESO",
-      "cumplimiento_detalle": "EN PROCESO — seguimiento interno favorable (283/517 aprobados al 30/06/2026), pendiente de verificación oficial SIFODS al 30/09/2026",
-      "estado_color": "amarillo",
-      "nudos_criticos": [
-        "Demora del MINEDU en socializar la nómina de docentes con lectura y escritura inferior al nivel básico.",
-        "Proceso de validación del listado preliminar por condiciones diversas (licencias, renuncias, etc.).",
-        "Débil difusión de los cursos por parte de la DREH y las UGEL.",
-        "Débil seguimiento por parte de la DREH al proceso de inscripción al curso."
-      ],
-      "acciones_mejora": [
-        "Fortalecer el seguimiento a la inscripción de docentes en los cursos de lectura y escritura en lengua originaria (venció 30 de abril de 2026).",
-        "Realizar seguimiento para que los docentes inscritos culminen el curso."
-      ],
-      "responsables": [],
-      "detalle_ugel": [
-        {
-          "ugel": "UGEL Acobamba",
-          "denominador": 87,
-          "inscritos": 87,
-          "matriculados": 87,
-          "aprobados": 42
-        },
-        {
-          "ugel": "UGEL Angaraes",
-          "denominador": 92,
-          "inscritos": 84,
-          "matriculados": 84,
-          "aprobados": 43
-        },
-        {
-          "ugel": "UGEL Castrovirreyna",
-          "denominador": 12,
-          "inscritos": 12,
-          "matriculados": 12,
-          "aprobados": 12
-        },
-        {
-          "ugel": "UGEL Churcampa",
-          "denominador": 55,
-          "inscritos": 54,
-          "matriculados": 54,
-          "aprobados": 34
-        },
-        {
-          "ugel": "UGEL Huancavelica",
-          "denominador": 196,
-          "inscritos": 196,
-          "matriculados": 196,
-          "aprobados": 86
-        },
-        {
-          "ugel": "UGEL Huaytará",
-          "denominador": 4,
-          "inscritos": 4,
-          "matriculados": 4,
-          "aprobados": 3
-        },
-        {
-          "ugel": "UGEL Surcubamba",
-          "denominador": 26,
-          "inscritos": 25,
-          "matriculados": 25,
-          "aprobados": 24
-        },
-        {
-          "ugel": "UGEL Tayacaja",
-          "denominador": 45,
-          "inscritos": 45,
-          "matriculados": 45,
-          "aprobados": 39
-        },
-        {
-          "ugel": "TOTAL REGIÓN",
-          "denominador": 517,
-          "inscritos": 507,
-          "matriculados": 507,
-          "aprobados": 283
+
+        async function fetchLiveGoogleSheetsData(csvUrl) {
+            try {
+                const response = await fetch(csvUrl);
+                const csvText = await response.text();
+                const lines = csvText.split('\n');
+                const parsedData = [];
+
+                for(let i = 1; i < lines.length; i++) {
+                    if(!lines[i].trim()) continue;
+                    const cols = parseCSVLine(lines[i]);
+                    
+                    if(cols.length >= 12) {
+                        parsedData.push({
+                            codigo: cols[0],
+                            categoria: cols[1].toLowerCase().trim(),
+                            titulo: cols[2],
+                            descripcion: cols[3],
+                            basal: cols[4],
+                            meta: cols[5],
+                            plazo: cols[6],
+                            avance: cols[7],
+                            estado: cols[8].toUpperCase().trim(),
+                            nudos_criticos: cols[9],
+                            acciones: cols[10],
+                            responsable: cols[11]
+                        });
+                    }
+                }
+
+                if(parsedData.length > 0) {
+                    fedData = parsedData;
+                    document.getElementById('syncStatus').innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span><span class="text-xs text-emerald-400 font-bold uppercase tracking-wider">Sheets Conectado Live</span>';
+                    document.getElementById('syncStatus').className = "flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 px-4 py-1.5 rounded-full";
+                    switchCategory('educacion');
+                }
+            } catch (error) {
+                console.error("Error cargando la base de datos:", error);
+                document.getElementById('syncStatus').innerHTML = '<span class="w-2 h-2 rounded-full bg-red-500"></span><span class="text-xs text-red-400 font-bold uppercase tracking-wider">Error de Enlace</span>';
+                document.getElementById('syncStatus').className = "flex items-center gap-2 bg-red-500/10 border border-red-500/20 px-4 py-1.5 rounded-full";
+            }
         }
-      ],
-      "detalle_nota": "Conteos agregados por UGEL, sin datos personales (nombres/DNI omitidos por protección de datos). Fuente: seguimiento regional 'HUANCAVELICA_FED DEIB 2026_docentes preliminar', corte 30/06/2026 — condición Básico 1 (Aprobado/No aprobado).",
-      "ficha_tecnica": {
-        "archivo": "MC.06.01 Capacitación EIB.pdf",
-        "definicion": "Porcentaje de docentes de IE de Educación Intercultural Bilingüe (EIB) que se matriculan y culminan los cursos de lectura y escritura en lengua originaria en el SIFODS, respecto al total de docentes EIB con nivel menor al básico en dominio escrito según el RND-Bilingües vigente.",
-        "verificacion_oficial": "Única verificación: diciembre 2026",
-        "corte_bd": "30 de setiembre de 2026",
-        "numero_mediciones": "Única verificación (1 medición durante todo el convenio 2025-2026)",
-        "punto_focal_nacional": "Dirección de Educación Intercultural Bilingüe (DEIB) - MINEDU"
-      }
-    },
-    {
-      "codigo": "MC-07.01",
-      "nombre": "Porcentaje de docentes y otros agentes educativos de instituciones y programas educativos de Educación Básica Especial (EBE) que aprueban los cursos en el marco de educación inclusiva y atención a la diversidad, en materia de discapacidad.",
-      "basal": "31.4%",
-      "meta_1ra": "",
-      "meta_2da": "37.0%",
-      "plazo": "31 de diciembre de 2026",
-      "avance": "SIN DATA",
-      "cumplimiento": "SIN DATA",
-      "cumplimiento_detalle": "SIN DATA",
-      "estado_color": "gris",
-      "nudos_criticos": [
-        "MINEDU no ha socializado la relación de docentes y otros agentes educativos que son denominador para llevar los cursos en PerúEduca.",
-        "La DREH no tiene acceso al listado de docentes y otros agentes educativos de EBE a nivel de UGEL."
-      ],
-      "acciones_mejora": [
-        "Generar listado regional de docentes y otros agentes educativos de EBE contratados a nivel regional.",
-        "Fortalecer el seguimiento para que se registren y culminen el curso de PerúEduca."
-      ],
-      "responsables": [
-        "Responsable EBE"
-      ],
-      "ficha_tecnica": {
-        "archivo": "MC.07.01 Capacitación EBE.pdf",
-        "definicion": "Porcentaje de docentes y otros agentes educativos de instituciones y programas de Educación Básica Especial (EBE) que participan y aprueban los cursos de formación en el marco de la educación inclusiva y atención a la diversidad en discapacidad (Plataforma PerúEduca).",
-        "verificacion_oficial": "Única verificación: diciembre 2026",
-        "corte_bd": "31 de diciembre de 2026",
-        "numero_mediciones": "Única verificación (1 medición durante todo el convenio 2025-2026)",
-        "punto_focal_nacional": "Dirección de Educación Básica Especial (DEBE) - MINEDU"
-      },
-      "detalle_nota": "En el Drive existe un archivo de seguimiento regional ('SEGUIMIENTO DE CURSO DE EBE -FED.xlsx') con datos por UGEL, pero el campo de aprobación de curso está incompleto/inconsistente (mezcla 'en curso', 'sin certificado', formatos distintos) y no permite calcular con confianza cuántos aprobaron según la definición oficial. Se deja pendiente hasta contar con un reporte consolidado."
-    },
-    {
-      "codigo": "AI-05.01",
-      "nombre": "Número de Instituciones Educativas (IIEE) que realizaron mantenimiento de infraestructura sanitaria con control de calidad del agua.",
-      "basal": "0",
-      "meta_1ra": "",
-      "meta_2da": "10",
-      "plazo": "31 de diciembre de 2026 (junio a diciembre 2026)",
-      "avance": "11 registros FAM",
-      "cumplimiento": "EN PROCESO",
-      "cumplimiento_detalle": "En proceso",
-      "estado_color": "amarillo",
-      "nudos_criticos": [
-        "Cantidad baja de IIEE que cumplen los 3 criterios de priorización y forman parte del universo para implementar el indicador AI-05.01.",
-        "De las 13 IIEE que cumplen los 3 criterios de priorización, 5 no consideran instalaciones sanitarias en las FAM.",
-        "Directores que no hicieron rendiciones y se encuentran en condición de omisos, lo que no permite la aprobación."
-      ],
-      "acciones_mejora": [
-        "Fortalecer el seguimiento para que las 13 IIEE que cumplen los criterios registren las FAM considerando acciones de mantenimiento en instalaciones sanitarias.",
-        "Garantizar el registro de la declaración de gastos (DG) y el Panel de Culminación de Acciones (PCA) en el sistema Mi Mantenimiento de manera oportuna."
-      ],
-      "responsables": [
-        "Especialista de Mantenimiento DREH - UGEL"
-      ],
-      "detalle_iiee": [
-        {
-          "cod_local": "177206",
-          "distrito": "Lircay",
-          "ugel": "UGEL Angaraes",
-          "estudiantes": 1103,
-          "monto": "S/ 7,190.00",
-          "estado_fam": "ENVIADA PARA VERIFICACIÓN"
-        },
-        {
-          "cod_local": "182528",
-          "distrito": "Paucarbamba",
-          "ugel": "UGEL Churcampa",
-          "estudiantes": 125,
-          "monto": "S/ 5,590.00",
-          "estado_fam": "VERIFICADA"
-        },
-        {
-          "cod_local": "172162",
-          "distrito": "Acobambilla",
-          "ugel": "UGEL Huancavelica",
-          "estudiantes": 29,
-          "monto": "S/ 5,910.00",
-          "estado_fam": "ENVIADA PARA VERIFICACIÓN"
-        },
-        {
-          "cod_local": "171780",
-          "distrito": "Ascensión",
-          "ugel": "UGEL Huancavelica",
-          "estudiantes": 1699,
-          "monto": "S/ 7,870.00",
-          "estado_fam": "ENVIADA PARA VERIFICACIÓN"
-        },
-        {
-          "cod_local": "171803",
-          "distrito": "Huancavelica",
-          "ugel": "UGEL Huancavelica",
-          "estudiantes": 715,
-          "monto": "S/ 5,380.00",
-          "estado_fam": "SIN REGISTRAR"
-        },
-        {
-          "cod_local": "171563",
-          "distrito": "Huancavelica",
-          "ugel": "UGEL Huancavelica",
-          "estudiantes": 364,
-          "monto": "S/ 5,510.00",
-          "estado_fam": "ENVIADA PARA VERIFICACIÓN"
-        },
-        {
-          "cod_local": "174298",
-          "distrito": "Moya",
-          "ugel": "UGEL Huancavelica",
-          "estudiantes": 16,
-          "monto": "S/ 5,470.00",
-          "estado_fam": "ENVIADA PARA VERIFICACIÓN"
-        },
-        {
-          "cod_local": "174948",
-          "distrito": "Vilca",
-          "ugel": "UGEL Huancavelica",
-          "estudiantes": 19,
-          "monto": "S/ 5,650.00",
-          "estado_fam": "ENVIADA PARA VERIFICACIÓN"
-        },
-        {
-          "cod_local": "174910",
-          "distrito": "Vilca",
-          "ugel": "UGEL Huancavelica",
-          "estudiantes": 19,
-          "monto": "S/ 5,680.00",
-          "estado_fam": "ENVIADA PARA VERIFICACIÓN"
-        },
-        {
-          "cod_local": "187074",
-          "distrito": "Daniel Hernández",
-          "ugel": "UGEL Tayacaja",
-          "estudiantes": 380,
-          "monto": "S/ 6,810.00",
-          "estado_fam": "EN PROCESO DE REGISTRO"
-        },
-        {
-          "cod_local": "620627",
-          "distrito": "Daniel Hernández",
-          "ugel": "UGEL Tayacaja",
-          "estudiantes": 716,
-          "monto": "S/ 6,240.00",
-          "estado_fam": "VERIFICADA"
-        },
-        {
-          "cod_local": "252192",
-          "distrito": "Pampas",
-          "ugel": "UGEL Tayacaja",
-          "estudiantes": 272,
-          "monto": "S/ 6,960.00",
-          "estado_fam": "VERIFICADA"
-        },
-        {
-          "cod_local": "185517",
-          "distrito": "Pampas",
-          "ugel": "UGEL Tayacaja",
-          "estudiantes": 193,
-          "monto": "S/ 5,600.00",
-          "estado_fam": "VERIFICADA"
-        }
-      ],
-      "ficha_tecnica": {
-        "archivo": "AI.05.01 Control de Cloro.pdf",
-        "definicion": "Evalúa los registros/mediciones de cloro residual en fuentes o puntos de muestreo cercanos a las instituciones educativas (plataformas SUNASS, DATASS, Pequeñas Ciudades o SIVICA), durante 5 o más meses del periodo de evaluación, en IIEE cuya infraestructura sanitaria está registrada en Mi Mantenimiento 2026.",
-        "verificacion_oficial": "Segunda verificación (periodo junio-diciembre 2026)",
-        "corte_bd": "31 de diciembre de 2026",
-        "numero_mediciones": "Única verificación aplicable a este indicador (se llama 'segunda' porque sigue la numeración general del ciclo FED de 2 tramos; AI-05.01 solo se mide en el 2do tramo, jun-dic 2026)",
-        "punto_focal_nacional": "PRONIED / DIGESA / DIGEIE (MINEDU) y SUNASS-UFC CAMI YAKU (MVCS)"
-      }
-    }
-  ]
-}
-</script>
 
-<script>
-/*
- * Fuente de datos:
- * 1) Por defecto, intenta leer en vivo la pestaña "Educacion" del Google
- *    Sheet FED_MIDIS_Huancavelica_DATOS (así los cambios que el coordinador
- *    hace en el Sheet se reflejan solos, sin tocar ninguna URL).
- * 2) Si se abre con ?data=<url>, usa esa URL en su lugar (por ejemplo para
- *    apuntar a otra pestaña/categoría).
- * 3) Si la red falla o el Sheet no responde, cae de vuelta al bloque
- *    embebido #fed-data — así el archivo nunca se queda en blanco, incluso
- *    abriéndolo con doble clic (sin internet). Ver README.
- */
-const params = new URLSearchParams(location.search);
-const DEFAULT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1IFQAzfTTfYN-v8KdnXFLMV0_cMmcOXk6DDMwYldy-Zw/gviz/tq?tqx=out:csv&sheet=Educacion";
-const DATA_URL = params.get("data") || DEFAULT_SHEET_URL;
-
-const ESTADO_COLOR = { verde:"#2E9E5B", amarillo:"#F2A93B", rojo:"#D64545", azul:"#3B7FC4", gris:"#9AA5B1" };
-const ESTADO_LABEL = { verde:"Cumple", amarillo:"En proceso", azul:"En proceso (2do tramo)", rojo:"En riesgo", gris:"Sin data" };
-
-function esc(s){
-  return String(s ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-}
-
-// Renderiza cualquier arreglo de objetos planos como tabla (columnas =
-// llaves del primer objeto). Así sirve igual para detalle_iiee,
-// detalle_ugel o detalle_provincia sin código específico por indicador.
-function renderDetailTable(rows){
-  if(!rows || !rows.length) return "";
-  const cols = Object.keys(rows[0]);
-  const head = cols.map(c => `<th>${esc(c.replace(/_/g," "))}</th>`).join("");
-  const body = rows.map(r => `<tr>${cols.map(c => `<td>${esc(r[c])}</td>`).join("")}</tr>`).join("");
-  return `<div class="mini-table-wrap"><table class="mini-table"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`;
-}
-
-function parsePct(text){
-  if(!text) return null;
-  const m = String(text).match(/(\d+(?:\.\d+)?)\s*%/);
-  return m ? parseFloat(m[1]) : null;
-}
-
-function parsePlazo(text){
-  const meses = {enero:0,febrero:1,marzo:2,abril:3,mayo:4,junio:5,julio:6,agosto:7,setiembre:8,septiembre:8,octubre:9,noviembre:10,diciembre:11};
-  const m = String(text).toLowerCase().match(/(\d{1,2}) de (\w+) de (\d{4})/);
-  if(!m) return null;
-  const [, d, mes, y] = m;
-  if(!(mes in meses)) return null;
-  return new Date(parseInt(y,10), meses[mes], parseInt(d,10));
-}
-
-function buildAlertas(indicadores){
-  const hoy = new Date();
-  const alertas = [];
-  indicadores.forEach((i) => {
-    const plazoDate = parsePlazo(i.plazo);
-    const vencido = plazoDate && plazoDate < hoy;
-    if(i.estado_color === "rojo" || (vencido && i.cumplimiento !== "CUMPLE")){
-      alertas.push({sev:"rojo", icon:"🔴", text:`${i.codigo} — brecha crítica / plazo vencido (${i.plazo}). Estado: ${i.cumplimiento_detalle}.`});
-    }
-    if(!i.responsables || i.responsables.length === 0){
-      alertas.push({sev:"amarillo", icon:"🟡", text:`${i.codigo} — sin responsable(s) asignado(s) en la matriz.`});
-    }
-    if(i.estado_color === "gris"){
-      alertas.push({sev:"azul", icon:"🔵", text:`${i.codigo} — sin data reportada / actividad sin evidencia de ejecución.`});
-    }
-  });
-  return alertas;
-}
-
-function render(data){
-  document.getElementById("dataStatus").remove();
-
-  document.getElementById("fUpdated").textContent = "Vista generada: " + new Date().toLocaleString("es-PE");
-
-  const inds = data.indicadores;
-
-  // KPIs
-  const counts = {verde:0, amarillo:0, azul:0, rojo:0, gris:0};
-  inds.forEach((i) => { counts[i.estado_color] = (counts[i.estado_color]||0) + 1; });
-  const kpiGrid = document.getElementById("kpiGrid");
-  const kpiDefs = [
-    ["verde","Cumple"], ["amarillo","En proceso"], ["azul","En proceso (2do tramo)"],
-    ["rojo","En riesgo"], ["gris","Sin data"],
-  ];
-  kpiGrid.innerHTML = `<div class="kpi-card"><div class="num">${inds.length}</div><div class="lbl">Total indicadores</div></div>` +
-    kpiDefs.map(([c,l]) => `<div class="kpi-card ${c}"><div class="num">${counts[c]||0}</div><div class="lbl">${l}</div></div>`).join("");
-
-  // Chart 1: panorama
-  new Chart(document.getElementById("chartPanorama"), {
-    type: "bar",
-    data: {
-      labels: inds.map(i => i.codigo),
-      datasets: [{
-        label: "Estado",
-        data: inds.map(() => 1),
-        backgroundColor: inds.map(i => ESTADO_COLOR[i.estado_color]),
-        borderRadius: 4,
-      }],
-    },
-    options: {
-      indexAxis: "y",
-      responsive: true,
-      plugins: {
-        legend: { display: false },
-        title: { display: true, text: "Panorama de cumplimiento — Categoría " + data.meta.categoria, color: "#1B3A6B", font: {size:14, weight:"bold"} },
-        tooltip: {
-          callbacks: {
-            label: (ctx) => inds[ctx.dataIndex].cumplimiento_detalle,
-          },
-        },
-      },
-      scales: { x: { display:false, max:1 }, y: { ticks: { font:{weight:"bold"} } } },
-    },
-  });
-
-  // Chart 2: avance vs meta (solo indicadores con % numérico real en avance)
-  const numericInds = inds.filter(i => parsePct(i.avance) !== null);
-  new Chart(document.getElementById("chartAvanceMeta"), {
-    type: "bar",
-    data: {
-      labels: numericInds.map(i => i.codigo),
-      datasets: [
-        { label: "Avance", data: numericInds.map(i => parsePct(i.avance)), backgroundColor: "#1B3A6B", borderRadius: 4 },
-        { label: "Meta", data: numericInds.map(i => parsePct(i.meta_2da)), backgroundColor: "#9AA5B1", borderRadius: 4 },
-      ],
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        title: { display:true, text:"Avance vs. Meta — indicadores con % disponible en la matriz", color:"#1B3A6B", font:{size:14, weight:"bold"} },
-        legend: { position: "bottom" },
-      },
-      scales: { y: { beginAtZero:true, max:110, ticks:{ callback:(v)=>v+"%" } } },
-    },
-  });
-  if(numericInds.length === 0){
-    document.getElementById("chartAvanceMeta").closest(".chart-card").innerHTML =
-      '<p class="legend-note">No hay indicadores con porcentaje de avance numérico disponible en esta matriz.</p>';
-  }
-
-  // Calendario de mediciones — ordenado por corte de base de datos
-  const calBody = document.getElementById("calendarioBody");
-  const calRows = inds.slice().sort((a, b) => {
-    const da = parsePlazo(a.ficha_tecnica?.corte_bd) || new Date(9999, 0, 1);
-    const db = parsePlazo(b.ficha_tecnica?.corte_bd) || new Date(9999, 0, 1);
-    return da - db;
-  });
-  calBody.innerHTML = calRows.map((ind) => {
-    const ft = ind.ficha_tecnica || {};
-    return `<tr>
-      <td><b>${esc(ind.codigo)}</b></td>
-      <td>${esc(ind.basal)}</td>
-      <td>${esc(ind.meta_2da)}</td>
-      <td>${esc(ft.numero_mediciones || "—")}</td>
-      <td>${esc(ft.verificacion_oficial || "—")}</td>
-      <td>${esc(ft.corte_bd || "—")}</td>
-    </tr>`;
-  }).join("");
-
-  // Matriz
-  const tbody = document.getElementById("matrixBody");
-  inds.forEach((ind, idx) => {
-    const row = document.createElement("tr");
-    row.className = "ind-row";
-    row.innerHTML = `
-      <td><span class="chevron">▶</span></td>
-      <td><b>${esc(ind.codigo)}</b></td>
-      <td class="col-nombre">${esc(ind.nombre)}</td>
-      <td>${esc(ind.basal)}</td>
-      <td>${esc(ind.meta_2da)}</td>
-      <td>${esc(ind.plazo)}</td>
-      <td>${esc(ind.avance || "—")}</td>
-      <td><span class="badge ${ind.estado_color}">${esc(ind.cumplimiento)}</span></td>
-    `;
-    const detailRow = document.createElement("tr");
-    detailRow.className = "detail-row";
-    detailRow.style.display = "none";
-    const nudos = (ind.nudos_criticos||[]).map(n=>`<li>${esc(n)}</li>`).join("");
-    const acciones = (ind.acciones_mejora||[]).map(n=>`<li>${esc(n)}</li>`).join("");
-    const responsables = ind.responsables && ind.responsables.length ? esc(ind.responsables.join(" · ")) : '<em>No consignado en la matriz.</em>';
-    const ft = ind.ficha_tecnica;
-    const fichaBox = ft ? `
-      <h4>Ficha técnica oficial (MIDIS)</h4>
-      <div class="ficha-box">
-        <div class="fila"><b>Línea base:</b> ${esc(ind.basal)} &nbsp;·&nbsp; <b>Meta FED 2025-2026:</b> ${esc(ind.meta_2da)}</div>
-        <div class="fila"><b>Qué mide:</b> ${esc(ft.definicion)}</div>
-        <div class="fila"><b>Cuántas mediciones:</b> ${esc(ft.numero_mediciones)}</div>
-        <div class="fila"><b>Cuándo se mide:</b> ${esc(ft.verificacion_oficial)} — corte de base de datos: ${esc(ft.corte_bd)}</div>
-        ${ft.punto_focal_nacional ? `<div class="fila"><b>Punto focal nacional:</b> ${esc(ft.punto_focal_nacional)}</div>` : ""}
-        <div class="fila"><b>Fuente:</b> ${esc(ft.archivo)} (carpeta "FICHAS TÉCNICAS")</div>
-      </div>` : "";
-
-    // Data desagregada: cualquier campo detalle_* presente en el indicador
-    // se muestra como tabla, con el mismo componente para todos los casos.
-    const desagregados = [
-      ["Detalle por IIEE", ind.detalle_iiee],
-      ["Detalle por UGEL", ind.detalle_ugel],
-      ["Detalle por provincia", ind.detalle_provincia],
-    ].filter(([, rows]) => rows && rows.length)
-     .map(([title, rows]) => `<h4>${esc(title)}</h4>${renderDetailTable(rows)}`)
-     .join("");
-    const notaDesagregado = ind.detalle_nota ? `<div class="detalle-nota">${esc(ind.detalle_nota)}</div>` : "";
-
-    detailRow.innerHTML = `<td colspan="8"><div class="detail-inner">
-      <div class="kv"><b>Estado:</b> ${esc(ind.cumplimiento_detalle)}</div>
-      ${fichaBox}
-      ${desagregados}
-      ${notaDesagregado}
-      ${nudos ? `<h4>Nudos críticos identificados</h4><ul>${nudos}</ul>` : ""}
-      ${acciones ? `<h4>Acciones de mejora sugeridas</h4><ul>${acciones}</ul>` : ""}
-      <h4>Responsables</h4><div>${responsables}</div>
-    </div></td>`;
-    row.addEventListener("click", () => {
-      const open = detailRow.style.display !== "none";
-      detailRow.style.display = open ? "none" : "table-row";
-      row.classList.toggle("open", !open);
-    });
-    tbody.appendChild(row);
-    tbody.appendChild(detailRow);
-  });
-
-  // Alertas
-  const alertas = buildAlertas(inds);
-  const alertList = document.getElementById("alertList");
-  if(alertas.length === 0){
-    alertList.innerHTML = '<li class="alert-empty">No se identificaron alertas automáticas a la fecha.</li>';
-  } else {
-    alertList.innerHTML = alertas.map(a => `<li class="sev-${a.sev}">${a.icon} ${esc(a.text)}</li>`).join("");
-  }
-
-  // Conclusiones y recomendaciones
-  const box = document.getElementById("conclusionesBox");
-  const conc = (data.conclusiones||[]).map(p=>`<p>${esc(p)}</p>`).join("");
-  const rec = (data.recomendaciones||[]).map(p=>`<p>${esc(p)}</p>`).join("");
-  box.innerHTML = `<h4 style="color:#0E7C86;">Conclusiones</h4>${conc}<h4 style="color:#0E7C86;">Recomendaciones</h4>${rec}`;
-}
-
-function loadEmbedded(){
-  const el = document.getElementById("fed-data");
-  return JSON.parse(el.textContent);
-}
-
-// ---------------------------------------------------------------------
-// Modo Sheets en vivo (?data=<url-csv-del-google-sheet>): el Sheet solo
-// trae la MATRIZ de indicadores (una fila por indicador, mismo esquema de
-// columnas de build_sheet.py). La narrativa institucional (meta, intro,
-// conclusiones, recomendaciones) sigue viniendo de los datos embebidos —
-// así el coordinador edita la matriz en Sheets sin tener que redactar
-// conclusiones ahí. Si el Sheet no responde, el dashboard cae de vuelta a
-// los datos embebidos en vez de mostrarse roto.
-// ---------------------------------------------------------------------
-
-// Parser CSV mínimo (soporta campos entre comillas con comas o comillas
-// escapadas ""), tal como lo exporta el endpoint gviz de Google Sheets.
-function parseCSV(text){
-  const rows = [];
-  let row = [], field = "", inQuotes = false;
-  for(let i = 0; i < text.length; i++){
-    const c = text[i];
-    if(inQuotes){
-      if(c === '"'){
-        if(text[i+1] === '"'){ field += '"'; i++; }
-        else { inQuotes = false; }
-      } else {
-        field += c;
-      }
-    } else if(c === '"'){
-      inQuotes = true;
-    } else if(c === ','){
-      row.push(field); field = "";
-    } else if(c === '\n'){
-      row.push(field); rows.push(row); row = []; field = "";
-    } else if(c === '\r'){
-      // ignorar, \n cierra la fila
-    } else {
-      field += c;
-    }
-  }
-  if(field.length || row.length){ row.push(field); rows.push(row); }
-  return rows;
-}
-
-// Encabezados EXACTOS de build_sheet.py (COLUMNS) → clave del indicador.
-const SHEET_HEADERS = [
-  ["Código", "codigo"],
-  ["Nombre del indicador", "nombre"],
-  ["Línea base", "basal"],
-  ["Meta 1ra verificación (si aplica)", "meta_1ra"],
-  ["Meta 2da verificación / única", "meta_2da"],
-  ["Plazo / corte", "plazo"],
-  ["Avance", "avance"],
-  ["Cumplimiento (CUMPLE/EN PROCESO/EN RIESGO/SIN DATA)", "cumplimiento"],
-  ["Detalle del estado", "cumplimiento_detalle"],
-  ["Color (verde/amarillo/azul/rojo/gris)", "estado_color"],
-  ["Nudos críticos (separar con |)", "nudos_criticos"],
-  ["Acciones de mejora (separar con |)", "acciones_mejora"],
-  ["Responsables (separar con |)", "responsables"],
-  ["Qué mide (ficha técnica)", "definicion"],
-  ["Cuántas mediciones", "numero_mediciones"],
-  ["Verificación oficial", "verificacion_oficial"],
-  ["Corte de base de datos", "corte_bd"],
-  ["Punto focal nacional", "punto_focal_nacional"],
-  ["Archivo de ficha técnica", "archivo_ficha"],
-];
-
-function csvToIndicadores(text){
-  const rows = parseCSV(text.trim());
-  if(!rows.length) return [];
-  const header = rows[0].map((h) => h.trim());
-  const keyIdx = {};
-  header.forEach((h, i) => {
-    const found = SHEET_HEADERS.find(([label]) => label === h);
-    if(found) keyIdx[found[1]] = i;
-  });
-  const dataRows = rows.slice(1).filter((r) => r.some((cell) => cell && cell.trim() !== ""));
-  const splitList = (s) => (s ? s.split("|").map((x) => x.trim()).filter(Boolean) : []);
-  const get = (r, k) => (keyIdx[k] != null ? (r[keyIdx[k]] || "").trim() : "");
-  return dataRows.map((r) => ({
-    codigo: get(r, "codigo"),
-    nombre: get(r, "nombre"),
-    basal: get(r, "basal"),
-    meta_1ra: get(r, "meta_1ra"),
-    meta_2da: get(r, "meta_2da"),
-    plazo: get(r, "plazo"),
-    avance: get(r, "avance"),
-    cumplimiento: get(r, "cumplimiento") || "SIN DATA",
-    cumplimiento_detalle: get(r, "cumplimiento_detalle"),
-    estado_color: get(r, "estado_color") || "gris",
-    nudos_criticos: splitList(get(r, "nudos_criticos")),
-    acciones_mejora: splitList(get(r, "acciones_mejora")),
-    responsables: splitList(get(r, "responsables")),
-    ficha_tecnica: {
-      definicion: get(r, "definicion"),
-      numero_mediciones: get(r, "numero_mediciones"),
-      verificacion_oficial: get(r, "verificacion_oficial"),
-      corte_bd: get(r, "corte_bd"),
-      punto_focal_nacional: get(r, "punto_focal_nacional"),
-      archivo: get(r, "archivo_ficha"),
-    },
-  }));
-}
-
-function renderWithSourceTag(data, sourceLabel){
-  render(data);
-  const f = document.getElementById("fFuente");
-  if(f) f.innerHTML += ' <span class="source-tag">' + esc(sourceLabel) + "</span>";
-}
-
-if(DATA_URL){
-  fetch(DATA_URL)
-    .then((r) => { if(!r.ok) throw new Error("HTTP " + r.status); return r.text(); })
-    .then((csvText) => {
-      const indicadoresLive = csvToIndicadores(csvText);
-      if(!indicadoresLive.length) throw new Error("La hoja no devolvió filas de indicadores");
-      const base = loadEmbedded();
-      base.indicadores = indicadoresLive;
-      renderWithSourceTag(base, "Matriz en vivo desde Google Sheets");
-    })
-    .catch((err) => {
-      // No dejar el dashboard roto: cae de vuelta a los datos embebidos y
-      // solo avisa del problema de forma discreta.
-      try {
-        renderWithSourceTag(loadEmbedded(), "Datos embebidos (no se pudo leer el Sheet: " + err.message + ")");
-      } catch (err2) {
-        const el = document.getElementById("dataStatus");
-        if(el){
-          el.className = "err";
-          el.textContent = "No se pudieron cargar los datos externos ni los embebidos: " + err2.message;
-        } else {
-          console.error("No se pudieron cargar los datos externos ni los embebidos:", err2);
-        }
-      }
-    });
-} else {
-  // Modo institucional por defecto: datos embebidos, funciona sin servidor.
-  try {
-    render(loadEmbedded());
-  } catch (err) {
-    const el = document.getElementById("dataStatus");
-    if(el){
-      el.className = "err";
-      el.textContent = "No se pudieron leer los datos embebidos: " + err.message;
-    } else {
-      console.error("No se pudieron leer los datos embebidos:", err);
-    }
-  }
-}
-</script>
-
+        // URL AUTOMÁTICA ENLAZADA DIRECTAMENTE A TU ENLACE DE PUBLICACIÓN CSV
+        const googleSheetsCSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR9zDKSFC5KpqpeLDkuaL183NmuqDnxgIqSB-vI9bp7Lac9tzJGcbse0JVt4mCKxemTiF7jdEiWBiyl/pub?output=csv'; 
+        
+        fetchLiveGoogleSheetsData(googleSheetsCSV);
+    </script>
 </body>
 </html>

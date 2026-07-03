@@ -197,19 +197,10 @@
 
 <header class="top">
   <div class="top-inner">
-    <div class="logos">
-      <img src="assets/logo_midis.jpg" alt="MIDIS" />
-      <img src="assets/logo_dreh.jpeg" alt="DREH Huancavelica" class="square" />
-    </div>
     <div class="title-block">
-      <h1>FED Huancavelica — Categoría <span id="hCategoria">Educación</span></h1>
-      <p>Fondo de Estímulo al Desempeño y Logro de Resultados Sociales · Región <span id="hRegion">Huancavelica</span></p>
+      <h1>FONDO DE ESTÍMULO AL DESEMPEÑO Y LOGRO DE RESULTADOS SOCIALES - FED</h1>
+      <p>Coordinación Territorial FED MIDIS Huancavelica</p>
     </div>
-  </div>
-  <div class="meta-row">
-    <span id="hNorma"></span>
-    <span id="hTramo"></span>
-    <span id="hCoordinador"></span>
   </div>
 </header>
 
@@ -281,7 +272,6 @@
 </main>
 
 <footer class="bottom">
-  <span id="fFuente"></span>
   <span id="fUpdated"></span>
 </footer>
 
@@ -1154,12 +1144,6 @@ function buildAlertas(indicadores){
 function render(data){
   document.getElementById("dataStatus").remove();
 
-  document.getElementById("hCategoria").textContent = data.meta.categoria;
-  document.getElementById("hRegion").textContent = data.meta.region;
-  document.getElementById("hNorma").textContent = data.meta.norma;
-  document.getElementById("hTramo").textContent = data.meta.tramo;
-  document.getElementById("hCoordinador").textContent = data.meta.coordinador;
-  document.getElementById("fFuente").innerHTML = "Fase " + esc(data.meta.fase) + '<span class="source-tag">' + esc(data.meta.fuente) + "</span>";
   document.getElementById("fUpdated").textContent = "Vista generada: " + new Date().toLocaleString("es-PE");
 
   const inds = data.indicadores;
